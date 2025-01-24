@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:task_scheduler/core/commons/helper/navigator.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
+import 'package:task_scheduler/features/add_project/presentation/screen/add_project_screen.dart';
 
 import 'dash_board_page/presentation/screen/dash_board_screen.dart';
 
@@ -35,7 +37,7 @@ class _GeneralPageWithNavBarState extends State<GeneralPageWithNavBar> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue.shade900,
         shape: CircleBorder(),
-        onPressed: () {},
+        onPressed: () => AppNavigator.push(context, AddProjectScreen()),
         child: Icon(
           Icons.add,
           size: appHeight * .044,
