@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 
-import 'dash_board_page/presentation/screen/home_screen.dart';
+import 'dash_board_page/presentation/screen/dash_board_screen.dart';
 
 class GeneralPageWithNavBar extends StatefulWidget {
   const GeneralPageWithNavBar({super.key});
