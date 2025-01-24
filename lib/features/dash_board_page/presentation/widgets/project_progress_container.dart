@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 
@@ -54,11 +55,14 @@ class ProjectProgressContainer extends StatelessWidget {
             ),
           ),
           SizedBox(height: appHeight * .02),
-          LinearProgressIndicator(
-            backgroundColor: Colors.blue,
-            minHeight: appHeight * .015,
-            borderRadius: BorderRadius.circular(20),
-          )
+          LinearPercentIndicator(
+            backgroundColor: Colors.white,
+            animation: true,
+            lineHeight: appHeight * .015,
+            percent: .7,
+            progressColor: Colors.blue,
+            barRadius: Radius.circular(10),
+          ),
         ],
       ),
     );

@@ -35,7 +35,7 @@ class DashBoardScreenWidgets extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: appHeight * .015,
+            spacing: appHeight * .03,
             children: [
               homePageAppBar(appWidth),
 

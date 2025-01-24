@@ -3,6 +3,7 @@ import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/commons/helper/navigator.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/add_project/presentation/screen/add_project_screen.dart';
+import 'package:task_scheduler/features/today_task/presentation/screen/today_task_screen.dart';
 
 import 'dash_board_page/presentation/screen/dash_board_screen.dart';
 
@@ -18,7 +19,7 @@ class _GeneralPageWithNavBarState extends State<GeneralPageWithNavBar> {
 
   final List<Widget> _pages = const [
     DashBoardScreen(),
-    DashBoardScreen(),
+    TodayTaskScreen(),
     DashBoardScreen(),
     DashBoardScreen(),
   ];

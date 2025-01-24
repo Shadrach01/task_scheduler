@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
@@ -12,26 +13,25 @@ class BannerContainer extends StatelessWidget {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
     return Container(
-      height: appHeight * .16,
+      height: appHeight * .2,
       width: appWidth,
       padding: EdgeInsets.symmetric(
         horizontal: appWidth * .04,
-        vertical: appHeight * .02,
+        vertical: appHeight * .025,
       ),
       decoration: BoxDecoration(
         color: Colors.blue.shade900,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: appWidth * .05,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        spacing: appWidth * .08,
         children: [
           Expanded(
             flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: appHeight * .01,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Your today's task is almost done!",
@@ -63,14 +63,31 @@ class BannerContainer extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: CircleAvatar(
-              radius: appHeight * .7,
+            child: CircularPercentIndicator(
+              radius: appWidth * .135,
+              animation: true,
+              lineWidth: appWidth * .03,
+              percent: 0.85,
+              progressColor: Colors.white,
+              circularStrokeCap: CircularStrokeCap.round,
+              center: Text(
+                "85%",
+                style: AppTextStyle.textStyle(
+                  color: Colors.white,
+                  weight: FontWeight.bold,
+                  size: 16,
+                ),
+              ),
             ),
           ),
-          Icon(
-            IconlyBold.more_square,
-            size: appHeight * .038,
-            color: Colors.grey,
+          Column(
+            children: [
+              Icon(
+                IconlyBold.more_square,
+                size: appHeight * .038,
+                color: Colors.grey,
+              ),
+            ],
           ),
         ],
       ),
