@@ -5,7 +5,7 @@ import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/image_res.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
-import 'package:task_scheduler/features/home_page.dart';
+import 'package:task_scheduler/features/general_page_nav_bar.dart';
 
 class OnboardingScreenWidgets extends StatelessWidget {
   const OnboardingScreenWidgets({super.key});

@@ -1,30 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/commons/helper/navigator.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/add_project/presentation/screen/add_project_screen.dart';
 import 'package:task_scheduler/features/today_task/presentation/screen/today_task_screen.dart';
+import 'package:task_scheduler/features/user_profile_screen/controller/input_user_details_controller.dart';
+import 'package:task_scheduler/features/user_profile_screen/presentation/screen/user_details_screen.dart';
 
 import 'dash_board_page/presentation/screen/dash_board_screen.dart';
 
-class GeneralPageWithNavBar extends StatefulWidget {
+class GeneralPageWithNavBar extends ConsumerStatefulWidget {
   const GeneralPageWithNavBar({super.key});
 
   @override
-  State<GeneralPageWithNavBar> createState() => _GeneralPageWithNavBarState();
+  ConsumerState<GeneralPageWithNavBar> createState() =>
+      _GeneralPageWithNavBarState();
 }
 
-class _GeneralPageWithNavBarState extends State<GeneralPageWithNavBar> {
+class _GeneralPageWithNavBarState extends ConsumerState<GeneralPageWithNavBar> {
+  final InputUserDetailsController _controller = InputUserDetailsController();
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [
     DashBoardScreen(),
     TodayTaskScreen(),
     DashBoardScreen(),
-    DashBoardScreen(),
+    UserProfileScreen(),
   ];
 
   final PageStorageBucket _bucket = PageStorageBucket();
+
+  @override
+  void initState() {
+    // Load user data from Hive when the widget is first created
+    _controller.loadUserDetailsFromHive(ref);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'features/onboarding_page/presentation/screen/onboarding_screen.dart';
+import 'package:task_scheduler/features/general_page_nav_bar.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
     // );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const OnboardingScreen(),
+      home: const GeneralPageWithNavBar(),
     );
   }
 }

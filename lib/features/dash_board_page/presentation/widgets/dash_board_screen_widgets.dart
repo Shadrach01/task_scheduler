@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
@@ -6,13 +9,15 @@ import 'package:task_scheduler/features/dash_board_page/presentation/widgets/pro
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/project_tile.dart';
 
 import '../../../../core/utils/image_res.dart';
+import '../../../user_profile_screen/provider/notifier_provider.dart';
 import 'banner_container.dart';
 
-class DashBoardScreenWidgets extends StatelessWidget {
+class DashBoardScreenWidgets extends ConsumerWidget {
   const DashBoardScreenWidgets({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(inputUserDetailsNotifierProvider);
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
     return Container(
@@ -37,7 +42,11 @@ class DashBoardScreenWidgets extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: appHeight * .03,
             children: [
-              homePageAppBar(appWidth),
+              homePageAppBar(
+                appWidth,
+                userState.profilePicture,
+                userState.userName,
+              ),
 
               // Task almost done container
               BannerContainer(),
@@ -55,11 +64,20 @@ class DashBoardScreenWidgets extends StatelessWidget {
   }
 
   // App bar
-  AppBar homePageAppBar(double width) {
+  AppBar homePageAppBar(double width, String pp, String userName) {
     return AppBar(
       leading: CircleAvatar(
         backgroundColor: Colors.blue,
-        radius: width * .055,
+        backgroundImage:
+            pp.isNotEmpty ? FileImage(File(pp)) as ImageProvider : null,
+        radius: width * .2,
+        child: pp.isEmpty
+            ? Icon(
+                IconlyBold.user_2,
+                color: Colors.grey.shade700,
+                size: width * .09,
+              )
+            : null,
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +89,7 @@ class DashBoardScreenWidgets extends StatelessWidget {
             ),
           ),
           Text(
-            "Livia Vaccaro",
+            userName.isEmpty ? 'No username' : userName,
             style: AppTextStyle.textStyle(
               size: 18,
               weight: FontWeight.bold,
