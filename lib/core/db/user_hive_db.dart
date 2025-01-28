@@ -1,8 +1,12 @@
 // HIVE DB FOR USER DETAILS
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:task_scheduler/core/models/user_details.dart';
+import 'package:task_scheduler/core/models/user_model/user_details.dart';
 
 class UserHiveDB {
+  static final UserHiveDB _instance = UserHiveDB._internal();
+  factory UserHiveDB() => _instance;
+  UserHiveDB._internal();
+
   static const String userBoxName = 'userBox';
 
   // Open Hive box

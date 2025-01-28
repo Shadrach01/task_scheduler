@@ -1,5 +1,5 @@
 import 'package:task_scheduler/core/db/user_hive_db.dart';
-import 'package:task_scheduler/core/models/user_details.dart';
+import 'package:task_scheduler/core/models/user_model/user_details.dart';
 
 class UserRepository {
   final UserHiveDB userHiveDB;

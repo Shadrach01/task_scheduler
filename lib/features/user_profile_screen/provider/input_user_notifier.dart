@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:task_scheduler/core/models/user_details.dart';
-import 'package:task_scheduler/core/repos/userRepository.dart';
+import 'package:task_scheduler/core/models/user_model/user_details.dart';
+import 'package:task_scheduler/core/repos/user_repository.dart';
 
 import 'input_user_state.dart';
 
@@ -27,8 +27,6 @@ class InputUserNotifier extends StateNotifier<InputUserState> {
     );
 
     await userRepository.saveUserDetails(userDetails);
-
-    print(await userRepository.getUserDetails('user_id_1'));
   }
 
   // Get User from HiveDB

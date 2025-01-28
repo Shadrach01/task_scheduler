@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/db/user_hive_db.dart';
-import 'package:task_scheduler/core/repos/userRepository.dart';
+import 'package:task_scheduler/core/repos/user_repository.dart';
 
 import 'input_user_notifier.dart';
 import 'input_user_state.dart';

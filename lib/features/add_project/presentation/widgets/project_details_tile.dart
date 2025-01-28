@@ -6,9 +6,13 @@ import '../../../../core/utils/app_text_style.dart';
 
 class ProjectDetailsTile extends StatelessWidget {
   final String containerTitle;
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
   const ProjectDetailsTile({
     super.key,
     this.containerTitle = '',
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -39,7 +43,10 @@ class ProjectDetailsTile extends StatelessWidget {
           ),
 
           // TextField
-          const AppTextField(),
+          AppTextField(
+            controller: controller,
+            onChanged: onChanged,
+          ),
         ],
       ),
     );

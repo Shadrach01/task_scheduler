@@ -21,15 +21,6 @@ class InputUserDetailsController {
     }
   }
 
-  void updateUserName(WidgetRef ref) {
-    String userName = '';
-    userNameController.text = userName;
-
-    ref
-        .read(inputUserDetailsNotifierProvider.notifier)
-        .onUserNameChanged(userName);
-  }
-
   Future saveUserDetailsToHive(WidgetRef ref) async {
     await ref.read(inputUserDetailsNotifierProvider.notifier).saveUserDetails();
   }

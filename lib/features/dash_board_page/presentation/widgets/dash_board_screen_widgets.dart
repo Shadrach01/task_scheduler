@@ -66,6 +66,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
   // App bar
   AppBar homePageAppBar(double width, String pp, String userName) {
     return AppBar(
+      backgroundColor: Colors.transparent,
       leading: CircleAvatar(
         backgroundColor: Colors.blue,
         backgroundImage:

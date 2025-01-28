@@ -7,11 +7,15 @@ class TaskGroupTile extends StatelessWidget {
   final Widget? leading;
   final String title;
   final String subTitle;
+  final double subTitleSize;
+  final VoidCallback? onArrowPressed;
   const TaskGroupTile({
     super.key,
     this.leading,
     this.title = '',
     this.subTitle = '',
+    this.subTitleSize = 18,
+    this.onArrowPressed,
   });
 
   @override
@@ -28,15 +32,13 @@ class TaskGroupTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: leading == null
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: appWidth * .025,
         children: [
-          SizedBox(
-            height: appHeight * .04,
-            width: appWidth * .09,
-            child: leading,
-          ),
+          if (leading != null) leading!,
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +47,7 @@ class TaskGroupTile extends StatelessWidget {
                 title,
                 style: AppTextStyle.textStyle(
                   color: Colors.grey.shade800,
-                  size: 14,
+                  size: 15,
                   weight: FontWeight.w400,
                 ),
               ),
@@ -53,23 +55,33 @@ class TaskGroupTile extends StatelessWidget {
                 subTitle,
                 style: AppTextStyle.textStyle(
                   color: Colors.black87,
-                  size: 18,
-                  weight: FontWeight.w700,
+                  size: subTitleSize,
+                  weight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-          Spacer(),
-          IconButton(
-            onPressed: () {
-              // TODO: FIX THE DROP DOWN BUTTON
-            },
-            icon: Icon(
-              IconlyBold.arrow_down_2,
-              size: appHeight * .037,
-              color: Colors.black87,
+          if (leading != null) Spacer(),
+          if (leading != null)
+            IconButton(
+              onPressed: onArrowPressed,
+              icon: Icon(
+                IconlyBold.arrow_down_2,
+                size: appHeight * .03,
+                color: Colors.black87,
+              ),
+            )
+          else
+            Expanded(
+              child: IconButton(
+                onPressed: onArrowPressed,
+                icon: Icon(
+                  IconlyBold.arrow_down_2,
+                  size: appHeight * .03,
+                  color: Colors.black87,
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );

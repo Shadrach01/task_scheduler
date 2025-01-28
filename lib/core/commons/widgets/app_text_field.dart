@@ -27,7 +27,7 @@ class AppTextField extends StatelessWidget {
       style: AppTextStyle.textStyle(
         color: Colors.black87,
         size: 20,
-        weight: FontWeight.normal,
+        weight: FontWeight.w600,
       ),
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
