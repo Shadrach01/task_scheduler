@@ -4,7 +4,19 @@ import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile({super.key});
+  final String taskGroup;
+  // final IconData taskIcon;
+  final String taskName;
+  final String taskDescription;
+  final String taskStartTime;
+  const TaskTile({
+    super.key,
+    required this.taskGroup,
+    // required this.taskIcon,
+    required this.taskName,
+    required this.taskDescription,
+    required this.taskStartTime,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,7 @@ class TaskTile extends StatelessWidget {
               spacing: appHeight * .01,
               children: [
                 Text(
-                  "Grocery Sopping app design",
+                  taskGroup,
                   style: AppTextStyle.textStyle(
                     color: Colors.grey.shade700,
                     size: 14,
@@ -38,7 +50,7 @@ class TaskTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Market Research",
+                  taskName,
                   style: AppTextStyle.textStyle(
                     color: Colors.black87,
                     size: 18,
@@ -56,7 +68,7 @@ class TaskTile extends StatelessWidget {
                       size: appHeight * .02,
                     ),
                     Text(
-                      "10:00 AM",
+                      taskStartTime,
                       style: AppTextStyle.textStyle(
                         color: Colors.blueGrey.withOpacity(.5),
                         size: 14,
@@ -78,6 +90,9 @@ class TaskTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.deepOrangeAccent,
                   ),
+                  // child: Icon(
+                  //   taskIcon,
+                  // ),
                 ),
                 SizedBox(height: appHeight * .03),
                 Container(

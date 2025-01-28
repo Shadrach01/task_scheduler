@@ -4,6 +4,7 @@ import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/commons/helper/navigator.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/add_project/presentation/screen/add_project_screen.dart';
+import 'package:task_scheduler/features/all_tasks/presentation/screen/all_tasks_screen.dart';
 import 'package:task_scheduler/features/today_task/presentation/screen/today_task_screen.dart';
 import 'package:task_scheduler/features/user_profile_screen/controller/input_user_details_controller.dart';
 import 'package:task_scheduler/features/user_profile_screen/presentation/screen/user_details_screen.dart';
@@ -25,7 +26,7 @@ class _GeneralPageWithNavBarState extends ConsumerState<GeneralPageWithNavBar> {
   final List<Widget> _pages = const [
     DashBoardScreen(),
     TodayTaskScreen(),
-    DashBoardScreen(),
+    AllTasksScreen(),
     UserProfileScreen(),
   ];
 

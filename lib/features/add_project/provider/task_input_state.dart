@@ -1,3 +1,5 @@
+import 'package:task_scheduler/core/models/task_model/task_model.dart';
+
 class TaskInputState {
   final String taskGroup;
   final String taskIcon;
@@ -7,6 +9,7 @@ class TaskInputState {
   final String startTime;
   final String endDate;
   final String endTime;
+  final List<TaskModel> tasks;
 
   TaskInputState({
     this.taskGroup = '',
@@ -17,6 +20,7 @@ class TaskInputState {
     this.startTime = '',
     this.endDate = '',
     this.endTime = '',
+    this.tasks = const [],
   });
 
   TaskInputState copyWith({
@@ -28,6 +32,7 @@ class TaskInputState {
     String? startTime,
     String? endDate,
     String? endTime,
+    List<TaskModel>? tasks,
   }) {
     return TaskInputState(
       taskGroup: taskGroup ?? this.taskGroup,
@@ -38,6 +43,7 @@ class TaskInputState {
       startTime: startTime ?? this.startTime,
       endDate: endDate ?? this.endDate,
       endTime: endTime ?? this.endTime,
+      tasks: tasks ?? this.tasks,
     );
   }
 }

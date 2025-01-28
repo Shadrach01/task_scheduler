@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/features/add_project/provider/task_notifier_provider.dart';
 
-class TaskInputController {
-  TaskInputController();
+import '../../../core/models/task_model/task_model.dart';
+
+class TaskController {
+  TaskController();
 
   // Task name controller
   TextEditingController taskNameController = TextEditingController();
@@ -40,5 +44,14 @@ class TaskInputController {
     // }
 
     await ref.read(inputTaskDetailsNotifierProvider.notifier).saveTaskDetails();
+  }
+
+  // Get all tasks
+  Future<List<TaskModel>?> getAllTasks(WidgetRef ref) async {
+    final allTasks = await ref
+        .read(inputTaskDetailsNotifierProvider.notifier)
+        .loadAllTasks();
+    log("All tasks: $allTasks");
+    return allTasks;
   }
 }

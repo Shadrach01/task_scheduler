@@ -33,11 +33,6 @@ class TaskHiveDB {
     log("save fn in ");
   }
 
-  // Get task by ID
-  // TaskModel? getTask(String taskId) {
-  //   return _taskBox?.get(taskId);
-  // }
-
   // Get all tasks
   List<TaskModel>? getAllTasks() {
     if (_taskBox == null) {

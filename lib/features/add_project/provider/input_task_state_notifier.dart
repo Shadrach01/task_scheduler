@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/repos/task_repo.dart';
@@ -9,8 +11,9 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
 
   // To create unique uid
   final Uuid _uuid = const Uuid();
-  InputTaskStateNotifier(this.taskRepo) : super(TaskInputState());
-
+  InputTaskStateNotifier(this.taskRepo) : super(TaskInputState()) {
+    _loadTasks();
+  }
   // Update task Group
   void onTaskGroupSelected(String taskGroup) {
     state = state.copyWith(taskGroup: taskGroup);
@@ -65,10 +68,19 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
       endDate: state.endDate,
       endTime: state.endTime,
     );
-    print('State before saving from the notifier: $taskModel');
+    log('State before saving from the notifier: $taskModel');
     await taskRepo.saveTaskDetails(taskModel);
 
-    print("All tasKs from the notifier: ${taskRepo.getAllTasks()}");
+    // After saving, reload all tasks and update the state
+    final allTasks = await taskRepo.getAllTasks();
+    state = state.copyWith(tasks: allTasks);
+
+    log("All tasKs from the notifier: ${taskRepo.getAllTasks()}");
+  }
+
+  Future<void> _loadTasks() async {
+    final allTasks = await taskRepo.getAllTasks();
+    state = state.copyWith(tasks: allTasks);
   }
 
   // // Get task from HiveDB

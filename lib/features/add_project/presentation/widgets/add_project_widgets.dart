@@ -7,10 +7,12 @@ import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/image_res.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
-import 'package:task_scheduler/features/add_project/presentation/controller/task_input_controller.dart';
 import 'package:task_scheduler/features/add_project/presentation/widgets/project_details_tile.dart';
 import 'package:task_scheduler/features/add_project/presentation/widgets/task_group_tile.dart';
 import 'package:task_scheduler/features/add_project/provider/task_notifier_provider.dart';
+
+import '../../../../core/utils/constants.dart';
+import '../../controller/task_input_controller.dart';
 
 class AddProjectWidgets extends ConsumerStatefulWidget {
   const AddProjectWidgets({super.key});
@@ -20,59 +22,6 @@ class AddProjectWidgets extends ConsumerStatefulWidget {
 }
 
 class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
-  final List<Map<String, dynamic>> categories = [
-    {
-      "name": "Office Project",
-      "icon": "IconlyBold.work", // Store as string
-      "color": Colors.deepOrange
-    },
-    {
-      "name": "Personal Projects",
-      "icon": "IconlyBold.profile", // Store as string
-      "color": Colors.blue
-    },
-    {
-      "name": "Health & Fitness",
-      "icon": "IconlyBold.heart", // Store as string
-      "color": Colors.green
-    },
-    {
-      "name": "Study",
-      "icon": "IconlyBold.document", // Store as string
-      "color": Colors.cyan,
-    },
-    {
-      "name": "Shopping & Errands",
-      "icon": "IconlyBold.bag", // Store as string
-      "color": Colors.pink,
-    },
-    {
-      "name": "Family",
-      "icon": "IconlyBold.user_3", // Store as string
-      "color": Colors.brown,
-    },
-    {
-      "name": "Finance",
-      "icon": "IconlyBold.wallet", // Store as string
-      "color": Colors.amber,
-    },
-    {
-      "name": "Meetings",
-      "icon": "IconlyBold.video", // Store as string
-      "color": Colors.red,
-    },
-    {
-      "name": "Hobbies",
-      "icon": "IconlyBold.discovery", // Store as string
-      "color": Colors.indigo,
-    },
-    {
-      "name": "Others",
-      "icon": "IconlyBold.category", // Store as string
-      "color": Colors.lime,
-    },
-  ];
-
   String selectedCategory = "Office Projects"; // Default selected category
   IconData selectedIcon = IconlyBold.work; // Default icon
   Color selectedColor = Colors.blue; // Default color
@@ -103,7 +52,7 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
   String formattedStartTime = '';
   String formattedEndTime = '';
 
-  final TaskInputController _controller = TaskInputController();
+  final TaskController _controller = TaskController();
 
   @override
   void didChangeDependencies() {
@@ -241,9 +190,9 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
             horizontal: width * .04,
           ),
           child: ListView.builder(
-            itemCount: categories.length,
+            itemCount: Constants.categories.length,
             itemBuilder: (context, index) {
-              final category = categories[index];
+              final category = Constants.categories[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: width * .035),
                 child: GestureDetector(

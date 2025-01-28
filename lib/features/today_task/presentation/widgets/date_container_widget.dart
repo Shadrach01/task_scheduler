@@ -12,39 +12,42 @@ class DateContainerWidget extends StatefulWidget {
 }
 
 class _DateContainerWidgetState extends State<DateContainerWidget> {
-  // List of colors for the TodoTiles
-  final List<Color> todoTileColors = [
-    Colors.red,
-    Colors.white,
-  ];
-
-  PageController? _pageController;
-
+  late ScrollController _scrollController;
   DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(
-      initialPage: _calculateInitialPageIndex(),
-      viewportFraction: 0.2,
-    );
 
     // Set the initially selected date to the current date
     _selectedDate = DateTime.now();
+
+    // Initialize ScrollController
+    _scrollController = ScrollController();
+
+    // Scroll to the current date after the first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToCurrentDate();
+    });
+  }
+
+  void _scrollToCurrentDate() {
+    // Calculate the scroll offset for the current date
+    double offset = (_selectedDate!.day - 1) *
+        context.appWidth *
+        0.24; // Adjust multiplier for item width + margin
+    _scrollController.jumpTo(offset);
   }
 
   @override
   Widget build(BuildContext context) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
+
     return SizedBox(
       height: appHeight * .12,
-      width: appWidth * 15,
-      child: PageView.builder(
-        padEnds: false,
-        pageSnapping: false,
-        controller: _pageController,
+      child: ListView.builder(
+        controller: _scrollController,
         scrollDirection: Axis.horizontal,
         itemCount: _daysInMonth(
           DateTime.now().year,
@@ -71,65 +74,54 @@ class _DateContainerWidgetState extends State<DateContainerWidget> {
                 _selectedDate = currentDate;
               });
             },
-            child: Center(
-              child: Container(
-                width: appWidth * .4,
-                padding: EdgeInsets.symmetric(
-                  horizontal: appWidth * .01,
-                  vertical: appHeight * .01,
-                ),
-                margin: EdgeInsets.symmetric(horizontal: appWidth * .02),
-                decoration: BoxDecoration(
-                  color: isSelectedDate
-                      ? Colors.blue.shade900
-                      : Colors.white, // Blue for selected, white otherwise
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      formattedMonth,
-                      style: AppTextStyle.textStyle(
-                        color: isSelectedDate ? Colors.white : Colors.black,
-                        size: 18,
-                        weight: FontWeight.normal,
-                      ),
+            child: Container(
+              width: appWidth * .2,
+              padding: EdgeInsets.symmetric(
+                horizontal: appWidth * .02,
+                vertical: appHeight * .01,
+              ),
+              margin: EdgeInsets.symmetric(horizontal: appWidth * .02),
+              decoration: BoxDecoration(
+                color: isSelectedDate
+                    ? Colors.blue.shade900
+                    : Colors.white, // Blue for selected, white otherwise
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    formattedMonth,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 18,
+                      weight: FontWeight.normal,
                     ),
-                    Text(
-                      formattedDate,
-                      style: AppTextStyle.textStyle(
-                        color: isSelectedDate ? Colors.white : Colors.black,
-                        size: 20,
-                        weight: FontWeight.bold,
-                      ),
+                  ),
+                  Text(
+                    formattedDate,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 20,
+                      weight: FontWeight.bold,
                     ),
-                    Text(
-                      formattedDay,
-                      style: AppTextStyle.textStyle(
-                        color: isSelectedDate ? Colors.white : Colors.black,
-                        size: 18,
-                        weight: FontWeight.normal,
-                      ),
+                  ),
+                  Text(
+                    formattedDay,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 18,
+                      weight: FontWeight.normal,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
         },
       ),
     );
-  }
-
-  int _calculateInitialPageIndex() {
-    DateTime currentDate = DateTime.now();
-
-    // Calculate the index corresponding to the current date
-    int currentIndex = currentDate.day - 1;
-
-    return currentIndex;
   }
 
   int _daysInMonth(int year, int month) {

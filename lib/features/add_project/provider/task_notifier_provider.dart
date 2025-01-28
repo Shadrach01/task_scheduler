@@ -10,7 +10,7 @@ final taskHiveDBProvider = Provider<TaskHiveDB>((ref) => TaskHiveDB());
 // Task Repository Provider
 final taskRepositoryProvider = Provider<TaskRepo>((ref) {
   final taskHiveDB = ref.read(taskHiveDBProvider);
-  print("task repo called from the provider: $taskHiveDB");
+
   return TaskRepo(taskHiveDB);
 });
 
@@ -18,6 +18,6 @@ final taskRepositoryProvider = Provider<TaskRepo>((ref) {
 final inputTaskDetailsNotifierProvider =
     StateNotifierProvider<InputTaskStateNotifier, TaskInputState>((ref) {
   final taskRepo = ref.read(taskRepositoryProvider);
-  print("task inout details called from the provider: $taskRepo");
+
   return InputTaskStateNotifier(taskRepo);
 });
