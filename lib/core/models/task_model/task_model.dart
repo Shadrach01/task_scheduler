@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:hive/hive.dart';
 
 part 'task_model.g.dart';
@@ -14,40 +16,54 @@ class TaskModel {
   final String taskIcon;
 
   @HiveField(3)
-  final String taskName;
+  final int taskGroupColor;
 
   @HiveField(4)
-  final String taskDescription;
+  final String taskName;
 
   @HiveField(5)
-  final String startDate;
+  final String taskDescription;
 
   @HiveField(6)
-  final String startTime;
+  final String startDate;
 
   @HiveField(7)
-  final String endDate;
+  final String startTime;
 
   @HiveField(8)
+  final String endDate;
+
+  @HiveField(9)
   final String endTime;
+
+  @HiveField(10)
+  final String status;
 
   const TaskModel({
     required this.id,
     required this.taskGroup,
     required this.taskIcon,
+    required this.taskGroupColor,
     required this.taskName,
     required this.taskDescription,
     required this.startDate,
     required this.startTime,
     required this.endDate,
     required this.endTime,
+    required this.status,
   });
+
+  /// Helper method to convert an integer to a Color
+  Color get color => Color(taskGroupColor);
+
+  /// Helper method to save a Color as an integer
+  static int colorToInt(Color color) => color.value;
 
   @override
   String toString() {
     return 'UserDetails(id: $id, taskGroup: $taskGroup, taskIcon: $taskIcon, '
-        'taskName: $taskName, taskDescription, '
+        'taskGroupColor: $taskGroupColor, taskName: $taskName, taskDescription, '
         'startDate: $startDate, startTime: $startTime, endDate: $endDate, '
-        'endTime: $endTime';
+        'endTime: $endTime, status: $status)';
   }
 }

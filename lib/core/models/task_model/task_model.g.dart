@@ -20,19 +20,21 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       id: fields[0] as String,
       taskGroup: fields[1] as String,
       taskIcon: fields[2] as String,
-      taskName: fields[3] as String,
-      taskDescription: fields[4] as String,
-      startDate: fields[5] as String,
-      startTime: fields[6] as String,
-      endDate: fields[7] as String,
-      endTime: fields[8] as String,
+      taskGroupColor: fields[3] as int,
+      taskName: fields[4] as String,
+      taskDescription: fields[5] as String,
+      startDate: fields[6] as String,
+      startTime: fields[7] as String,
+      endDate: fields[8] as String,
+      endTime: fields[9] as String,
+      status: fields[10] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TaskModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -40,17 +42,21 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(2)
       ..write(obj.taskIcon)
       ..writeByte(3)
-      ..write(obj.taskName)
+      ..write(obj.taskGroupColor)
       ..writeByte(4)
-      ..write(obj.taskDescription)
+      ..write(obj.taskName)
       ..writeByte(5)
-      ..write(obj.startDate)
+      ..write(obj.taskDescription)
       ..writeByte(6)
-      ..write(obj.startTime)
+      ..write(obj.startDate)
       ..writeByte(7)
-      ..write(obj.endDate)
+      ..write(obj.startTime)
       ..writeByte(8)
-      ..write(obj.endTime);
+      ..write(obj.endDate)
+      ..writeByte(9)
+      ..write(obj.endTime)
+      ..writeByte(10)
+      ..write(obj.status);
   }
 
   @override

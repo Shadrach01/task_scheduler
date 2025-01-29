@@ -5,10 +5,10 @@ import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/constants.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
-import 'package:task_scheduler/features/add_project/controller/task_input_controller.dart';
-import 'package:task_scheduler/features/add_project/provider/task_notifier_provider.dart';
+import 'package:task_scheduler/features/today_task/controller/today_task_controller.dart';
 import 'package:task_scheduler/features/today_task/presentation/widgets/date_container_widget.dart';
 import 'package:task_scheduler/features/today_task/presentation/widgets/task_tile.dart';
+import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 
 import '../../../../core/utils/app_text_style.dart';
 import '../../../../core/utils/image_res.dart';
@@ -21,7 +21,7 @@ class TodayTaskWidgets extends ConsumerStatefulWidget {
 }
 
 class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
-  final TaskController _controller = TaskController();
+  final TodayTaskController _controller = TodayTaskController();
 
   // Track the currently selected button
   int _selectedButton = 0;
@@ -29,6 +29,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
   @override
   void initState() {
     super.initState();
+
     _controller.getAllTasks(ref);
   }
 
@@ -38,7 +39,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
     final appWidth = context.appWidth;
 
     // Listen to the tasks state from riverpod
-    final tasks = ref.watch(inputTaskDetailsNotifierProvider).tasks;
+    final tasks = ref.watch(todayTasksNotifierProvider).tasks;
     return Container(
       height: appHeight,
       width: appWidth,
@@ -97,7 +98,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
 
 // Button Rows
   Widget _buttonsRow(double height, double width) {
-    final buttonsTexts = Constants.buttonsRowTexts;
+    final buttonsTexts = Constants.tasksStatus;
     return SizedBox(
       height: height * .07,
       child: ListView.separated(
@@ -164,11 +165,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
               itemBuilder: (context, index) {
                 final task = tasks[index];
                 return TaskTile(
-                  taskGroup: task.taskGroup,
-                  // taskIcon: null,
-                  taskName: task.taskName,
-                  taskDescription: task.taskDescription,
-                  taskStartTime: task.startTime,
+                  task: task,
                 );
               },
             ),

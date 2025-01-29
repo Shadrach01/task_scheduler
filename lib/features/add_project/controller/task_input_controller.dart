@@ -1,13 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:task_scheduler/features/add_project/provider/task_notifier_provider.dart';
+import 'package:task_scheduler/core/utils/constants.dart';
+import 'package:task_scheduler/features/add_project/provider/add_task_notifier_provider.dart';
 
-import '../../../core/models/task_model/task_model.dart';
+class AddTaskController {
+  final WidgetRef ref;
 
-class TaskController {
-  TaskController();
+  AddTaskController(this.ref);
 
   // Task name controller
   TextEditingController taskNameController = TextEditingController();
@@ -15,7 +14,12 @@ class TaskController {
 // Task details controller
   TextEditingController taskDescriptionController = TextEditingController();
 
-  Future saveTaskToHiveDB(BuildContext context, WidgetRef ref) async {
+  updateStatus() {
+    final status = Constants.tasksStatus[1];
+    ref.read(inputTaskDetailsNotifierProvider.notifier).updateStatus(status);
+  }
+
+  Future saveTaskToHiveDB(BuildContext context) async {
     // Get the current state
     var state = ref.read(inputTaskDetailsNotifierProvider);
 
@@ -42,16 +46,8 @@ class TaskController {
     // if (taskDescription.isEmpty || state.taskDescription.isEmpty) {
     //   return AppSnackBar.show(context, message: "Description cannot be empty");
     // }
+    updateStatus();
 
     await ref.read(inputTaskDetailsNotifierProvider.notifier).saveTaskDetails();
-  }
-
-  // Get all tasks
-  Future<List<TaskModel>?> getAllTasks(WidgetRef ref) async {
-    final allTasks = await ref
-        .read(inputTaskDetailsNotifierProvider.notifier)
-        .loadAllTasks();
-    log("All tasks: $allTasks");
-    return allTasks;
   }
 }

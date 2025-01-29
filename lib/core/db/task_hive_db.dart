@@ -29,8 +29,6 @@ class TaskHiveDB {
   Future<void> saveTask(TaskModel taskModel) async {
     await _taskBox?.put(taskModel.id, taskModel);
     log("Saved task with ID: ${taskModel.id}");
-
-    log("save fn in ");
   }
 
   // Get all tasks

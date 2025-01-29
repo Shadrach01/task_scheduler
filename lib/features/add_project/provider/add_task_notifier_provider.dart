@@ -2,8 +2,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/db/task_hive_db.dart';
 import 'package:task_scheduler/core/repos/task_repo.dart';
-import 'package:task_scheduler/features/add_project/provider/input_task_state_notifier.dart';
-import 'package:task_scheduler/features/add_project/provider/task_input_state.dart';
+import 'package:task_scheduler/features/add_project/provider/add_task_state.dart';
+import 'package:task_scheduler/features/add_project/provider/add_task_state_notifier.dart';
 
 final taskHiveDBProvider = Provider<TaskHiveDB>((ref) => TaskHiveDB());
 

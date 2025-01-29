@@ -1,9 +1,10 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/repos/task_repo.dart';
-import 'package:task_scheduler/features/add_project/provider/task_input_state.dart';
+import 'package:task_scheduler/features/add_project/provider/add_task_state.dart';
 import 'package:uuid/uuid.dart';
 
 class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
@@ -11,9 +12,7 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
 
   // To create unique uid
   final Uuid _uuid = const Uuid();
-  InputTaskStateNotifier(this.taskRepo) : super(TaskInputState()) {
-    _loadTasks();
-  }
+  InputTaskStateNotifier(this.taskRepo) : super(TaskInputState());
   // Update task Group
   void onTaskGroupSelected(String taskGroup) {
     state = state.copyWith(taskGroup: taskGroup);
@@ -22,6 +21,11 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
   // Update task Group
   void onTaskGroupIconSelected(String taskIcon) {
     state = state.copyWith(taskIcon: taskIcon);
+  }
+
+  // Update task Group
+  void onTaskGroupColorSelected(Color taskGroupColor) {
+    state = state.copyWith(taskGroupColor: taskGroupColor);
   }
 
   // Update task name
@@ -54,6 +58,10 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
     state = state.copyWith(endTime: endTime);
   }
 
+  void updateStatus(String status) {
+    state = state.copyWith(status: status);
+  }
+
   // Save task details
   Future<void> saveTaskDetails() async {
     final taskModel = TaskModel(
@@ -61,30 +69,16 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
       id: _uuid.v4(),
       taskGroup: state.taskGroup,
       taskIcon: state.taskIcon,
+      taskGroupColor: TaskModel.colorToInt(state.taskGroupColor),
       taskName: state.taskName,
       taskDescription: state.taskDescription,
       startDate: state.startDate,
       startTime: state.startTime,
       endDate: state.endDate,
       endTime: state.endTime,
+      status: state.status,
     );
     log('State before saving from the notifier: $taskModel');
     await taskRepo.saveTaskDetails(taskModel);
-
-    // After saving, reload all tasks and update the state
-    final allTasks = await taskRepo.getAllTasks();
-    state = state.copyWith(tasks: allTasks);
-
-    log("All tasKs from the notifier: ${taskRepo.getAllTasks()}");
-  }
-
-  Future<void> _loadTasks() async {
-    final allTasks = await taskRepo.getAllTasks();
-    state = state.copyWith(tasks: allTasks);
-  }
-
-  // // Get task from HiveDB
-  Future<List<TaskModel>?> loadAllTasks() async {
-    return taskRepo.getAllTasks();
   }
 }

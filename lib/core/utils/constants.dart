@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 
 class Constants {
   // Button Row Texts fot today task screen
-  static const List<String> buttonsRowTexts = [
+  static const List<String> tasksStatus = [
     "All",
-    "To Do",
-    "In Progress",
-    "Completed"
-  ];
-  static const List<String> taskGroups = [
-    "All",
-    "To Do",
+    "Not Started",
     "In Progress",
     "Completed"
   ];
 
-  static const List<Map<String, dynamic>> categories = [
+  // static const List<String> tasksStatus = [
+  //   "Not Started",
+  //   "In Progress",
+  //   "Completed"
+  // ];
+
+  static const List<Map<String, dynamic>> taskGroups = [
     {
       "name": "Office Project",
       "icon": "IconlyBold.work", // Store as string

@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
+import 'package:task_scheduler/core/commons/helper/get_icon_data.dart';
+import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 
 class TaskTile extends StatelessWidget {
-  final String taskGroup;
-  // final IconData taskIcon;
-  final String taskName;
-  final String taskDescription;
-  final String taskStartTime;
+  final TaskModel task;
   const TaskTile({
     super.key,
-    required this.taskGroup,
-    // required this.taskIcon,
-    required this.taskName,
-    required this.taskDescription,
-    required this.taskStartTime,
+    required this.task,
   });
 
   @override
   Widget build(BuildContext context) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
+
     return Card(
       color: Colors.white,
       elevation: .6,
@@ -42,7 +37,7 @@ class TaskTile extends StatelessWidget {
               spacing: appHeight * .01,
               children: [
                 Text(
-                  taskGroup,
+                  task.taskGroup,
                   style: AppTextStyle.textStyle(
                     color: Colors.grey.shade700,
                     size: 14,
@@ -50,7 +45,7 @@ class TaskTile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  taskName,
+                  task.taskName,
                   style: AppTextStyle.textStyle(
                     color: Colors.black87,
                     size: 18,
@@ -68,7 +63,7 @@ class TaskTile extends StatelessWidget {
                       size: appHeight * .02,
                     ),
                     Text(
-                      taskStartTime,
+                      task.startTime,
                       style: AppTextStyle.textStyle(
                         color: Colors.blueGrey.withOpacity(.5),
                         size: 14,
@@ -84,15 +79,16 @@ class TaskTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  height: appHeight * .03,
-                  width: appWidth * .07,
+                  height: appHeight * .04,
+                  width: appWidth * .09,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.deepOrangeAccent,
+                    color: task.color.withOpacity(.3),
                   ),
-                  // child: Icon(
-                  //   taskIcon,
-                  // ),
+                  child: Icon(
+                    getIconData(task.taskIcon),
+                    color: task.color,
+                  ),
                 ),
                 SizedBox(height: appHeight * .03),
                 Container(
@@ -105,7 +101,7 @@ class TaskTile extends StatelessWidget {
                     color: Colors.blueGrey.withOpacity(.3),
                   ),
                   child: Text(
-                    "Done",
+                    task.status,
                     style: AppTextStyle.textStyle(
                       color: Colors.blueGrey,
                       size: 13,

@@ -9,8 +9,9 @@ import 'package:task_scheduler/core/utils/image_res.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/add_project/presentation/widgets/project_details_tile.dart';
 import 'package:task_scheduler/features/add_project/presentation/widgets/task_group_tile.dart';
-import 'package:task_scheduler/features/add_project/provider/task_notifier_provider.dart';
+import 'package:task_scheduler/features/add_project/provider/add_task_notifier_provider.dart';
 
+import '../../../../core/commons/helper/get_icon_data.dart';
 import '../../../../core/utils/constants.dart';
 import '../../controller/task_input_controller.dart';
 
@@ -22,7 +23,7 @@ class AddProjectWidgets extends ConsumerStatefulWidget {
 }
 
 class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
-  String selectedCategory = "Office Projects"; // Default selected category
+  String selectedCategory = "Select group"; // Default selected category
   IconData selectedIcon = IconlyBold.work; // Default icon
   Color selectedColor = Colors.blue; // Default color
 
@@ -52,16 +53,18 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
   String formattedStartTime = '';
   String formattedEndTime = '';
 
-  final TaskController _controller = TaskController();
+  late AddTaskController _controller;
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
     // Initialize formatted times and dates after context is available
     formattedStartDate = DateFormat('dd MMM yyyy').format(startDate);
     formattedEndDate = DateFormat('dd MMM yyyy').format(endDate);
     formattedStartTime = startTime.format(context);
     formattedEndTime = endTime.format(context);
+
+    _controller = AddTaskController(ref);
+    super.didChangeDependencies();
   }
 
   @override
@@ -168,7 +171,7 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
                 style: AppTextStyle.textStyle(color: Colors.white, size: 20),
               ),
               onTap: () {
-                _controller.saveTaskToHiveDB(context, ref);
+                _controller.saveTaskToHiveDB(context);
                 AppNavigator.pop(context);
               },
             ),
@@ -190,9 +193,9 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
             horizontal: width * .04,
           ),
           child: ListView.builder(
-            itemCount: Constants.categories.length,
+            itemCount: Constants.taskGroups.length,
             itemBuilder: (context, index) {
-              final category = Constants.categories[index];
+              final category = Constants.taskGroups[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: width * .035),
                 child: GestureDetector(
@@ -217,11 +220,15 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
                       selectedColor = category['color'];
 
                       // Convert string to IconData and set it
-                      selectedIcon = _getIconData(category['icon']);
+                      selectedIcon = getIconData(category['icon']);
                     });
                     ref
                         .read(inputTaskDetailsNotifierProvider.notifier)
                         .onTaskGroupSelected(category['name']);
+
+                    ref
+                        .read(inputTaskDetailsNotifierProvider.notifier)
+                        .onTaskGroupColorSelected(category['color']);
 
                     ref
                         .read(inputTaskDetailsNotifierProvider.notifier)
@@ -235,34 +242,6 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
         );
       },
     );
-  }
-
-  // Helper function to convert string to IconData
-  IconData _getIconData(String iconName) {
-    switch (iconName) {
-      case "IconlyBold.work":
-        return IconlyBold.work;
-      case "IconlyBold.profile":
-        return IconlyBold.profile;
-      case "IconlyBold.heart":
-        return IconlyBold.heart;
-      case "IconlyBold.document":
-        return IconlyBold.document;
-      case "IconlyBold.bag":
-        return IconlyBold.bag;
-      case "IconlyBold.user_3":
-        return IconlyBold.user_3;
-      case "IconlyBold.wallet":
-        return IconlyBold.wallet;
-      case "IconlyBold.video":
-        return IconlyBold.video;
-      case "IconlyBold.discovery":
-        return IconlyBold.discovery;
-      case "IconlyBold.category":
-        return IconlyBold.category;
-      default:
-        return IconlyBold.work; // Default icon if no match
-    }
   }
 
   // Function to show dropdown for dates
