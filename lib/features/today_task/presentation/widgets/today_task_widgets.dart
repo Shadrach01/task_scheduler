@@ -30,7 +30,10 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
   void initState() {
     super.initState();
 
-    _controller.getAllTasks(ref);
+    // Defer the task loading to after the widget tree is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.getAllTasks(ref);
+    });
   }
 
   @override

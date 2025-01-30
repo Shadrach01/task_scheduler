@@ -63,7 +63,7 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
   }
 
   // Save task details
-  Future<void> saveTaskDetails() async {
+  Future<void> saveTaskDetails(WidgetRef ref) async {
     final taskModel = TaskModel(
       // Generate unique ID
       id: _uuid.v4(),

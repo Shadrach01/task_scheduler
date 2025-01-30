@@ -7,15 +7,15 @@ import '../../../core/models/task_model/task_model.dart';
 class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
   final TaskRepo taskRepo;
   TodayTasksNotifier(this.taskRepo) : super(TodayTaskState()) {
-    _loadTasks();
+    loadTasks();
   }
 
-  Future<void> _loadTasks() async {
+  Future<void> loadTasks() async {
     final allTasks = taskRepo.getAllTasks();
     state = state.copyWith(tasks: allTasks);
   }
 
-  // // Get task from HiveDB
+  //z Get task from HiveDB
   Future<List<TaskModel>?> loadAllTasks() async {
     return taskRepo.getAllTasks();
   }

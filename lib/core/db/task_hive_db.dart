@@ -3,8 +3,6 @@
 HIVE DB FOR TASKS
  */
 
-import 'dart:developer';
-
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 
@@ -22,13 +20,11 @@ class TaskHiveDB {
     Hive.registerAdapter(TaskModelAdapter());
 
     _taskBox = await Hive.openBox<TaskModel>(taskBoxName);
-    log("Task box initialized: ${_taskBox?.isOpen}");
   }
 
   // Save task data
   Future<void> saveTask(TaskModel taskModel) async {
     await _taskBox?.put(taskModel.id, taskModel);
-    log("Saved task with ID: ${taskModel.id}");
   }
 
   // Get all tasks

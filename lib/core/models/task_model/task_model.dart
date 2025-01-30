@@ -62,7 +62,7 @@ class TaskModel {
   @override
   String toString() {
     return 'UserDetails(id: $id, taskGroup: $taskGroup, taskIcon: $taskIcon, '
-        'taskGroupColor: $taskGroupColor, taskName: $taskName, taskDescription, '
+        'taskGroupColor: $taskGroupColor, taskName: $taskName, taskDescription: $taskDescription, '
         'startDate: $startDate, startTime: $startTime, endDate: $endDate, '
         'endTime: $endTime, status: $status)';
   }

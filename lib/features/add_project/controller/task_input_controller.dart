@@ -48,6 +48,8 @@ class AddTaskController {
     // }
     updateStatus();
 
-    await ref.read(inputTaskDetailsNotifierProvider.notifier).saveTaskDetails();
+    await ref
+        .read(inputTaskDetailsNotifierProvider.notifier)
+        .saveTaskDetails(ref);
   }
 }
