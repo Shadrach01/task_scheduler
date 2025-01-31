@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconly/iconly.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
@@ -16,7 +15,7 @@ class BannerContainer extends StatelessWidget {
       height: appHeight * .2,
       width: appWidth,
       padding: EdgeInsets.symmetric(
-        horizontal: appWidth * .04,
+        horizontal: appWidth * .075,
         vertical: appHeight * .025,
       ),
       decoration: BoxDecoration(
@@ -79,15 +78,6 @@ class BannerContainer extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              Icon(
-                IconlyBold.more_square,
-                size: appHeight * .038,
-                color: Colors.grey,
-              ),
-            ],
           ),
         ],
       ),

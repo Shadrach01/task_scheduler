@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/repos/task_repo.dart';
 import 'package:task_scheduler/features/add_project/provider/add_task_state.dart';
+import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
@@ -80,5 +81,8 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
     );
     log('State before saving from the notifier: $taskModel');
     await taskRepo.saveTaskDetails(taskModel);
+
+    // Call the loadTask in the today's task notifier to load the tasks again
+    await ref.read(todayTasksNotifierProvider.notifier).loadTasks();
   }
 }

@@ -6,7 +6,7 @@ import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/project_progress_container.dart';
-import 'package:task_scheduler/features/dash_board_page/presentation/widgets/project_tile.dart';
+import 'package:task_scheduler/features/dash_board_page/presentation/widgets/task_groups.dart';
 
 import '../../../../core/utils/image_res.dart';
 import '../../../user_profile_screen/provider/notifier_provider.dart';
@@ -18,6 +18,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(inputUserDetailsNotifierProvider);
+
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
     return Container(
@@ -35,30 +36,25 @@ class DashBoardScreenWidgets extends ConsumerWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: appHeight * .03,
-            children: [
-              homePageAppBar(
-                appWidth,
-                userState.profilePicture,
-                userState.userName,
-              ),
-
-              // Task almost done container
-              BannerContainer(),
-
-              // Project tasks that are in progress
-              progressContainer(appWidth, appHeight),
-
-              // Task Groups
-              taskGroups(appWidth, appHeight),
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: appHeight * .02,
+        children: [
+          homePageAppBar(
+            appWidth,
+            userState.profilePicture,
+            userState.userName,
           ),
-        ),
+
+          // Task almost done container
+          BannerContainer(),
+
+          // Project tasks that are in progress
+          progressContainer(appWidth, appHeight),
+
+          // Task Groups
+          Flexible(child: TaskGroups()),
+        ],
       ),
     );
   }
@@ -159,53 +155,4 @@ class DashBoardScreenWidgets extends ConsumerWidget {
   }
 
   // Task Groups
-  Widget taskGroups(double width, double height) {
-    return Column(
-      // spacing: height * .002,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: width * .01,
-          children: [
-            Text(
-              "Task Groups",
-              style: AppTextStyle.textStyle(
-                color: Colors.black87,
-                size: 20,
-                weight: FontWeight.bold,
-              ),
-            ),
-            Container(
-              height: height * .05,
-              width: width * .05,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey.withOpacity(.3),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  "4",
-                  style: AppTextStyle.textStyle(
-                    color: Colors.blueGrey,
-                    size: 14,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-        SizedBox(
-          height: height * .5,
-          width: width,
-          child: ListView.builder(
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              // Project tile
-              return ProjectTile();
-            },
-          ),
-        ),
-      ],
-    );
-  }
 }
