@@ -1,53 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
+import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 
 import '../../../../core/utils/app_text_style.dart';
 
-class DateContainerWidget extends StatefulWidget {
-  const DateContainerWidget({super.key});
+class DateContainerWidget extends ConsumerStatefulWidget {
+  final Function(DateTime) onDateSelected; // Call back to notify the parent
+  const DateContainerWidget({super.key, required this.onDateSelected});
 
   @override
-  State<DateContainerWidget> createState() => _DateContainerWidgetState();
+  ConsumerState<DateContainerWidget> createState() =>
+      _DateContainerWidgetState();
 }
 
-class _DateContainerWidgetState extends State<DateContainerWidget> {
-  late ScrollController _scrollController;
-  DateTime? _selectedDate;
-
+class _DateContainerWidgetState extends ConsumerState<DateContainerWidget> {
   @override
   void initState() {
     super.initState();
-
-    // Set the initially selected date to the current date
-    _selectedDate = DateTime.now();
-
-    // Initialize ScrollController
-    _scrollController = ScrollController();
-
-    // Scroll to the current date after the first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToCurrentDate();
-    });
-  }
-
-  void _scrollToCurrentDate() {
-    // Calculate the scroll offset for the current date
-    double offset = (_selectedDate!.day - 1) *
-        context.appWidth *
-        0.24; // Adjust multiplier for item width + margin
-    _scrollController.jumpTo(offset);
   }
 
   @override
   Widget build(BuildContext context) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
+    final selectedDate = ref.read(todayTasksNotifierProvider).selectedDate;
 
     return SizedBox(
       height: appHeight * .12,
       child: ListView.builder(
-        controller: _scrollController,
+        // controller: _scrollController,
         scrollDirection: Axis.horizontal,
         itemCount: _daysInMonth(
           DateTime.now().year,
@@ -64,16 +47,19 @@ class _DateContainerWidgetState extends State<DateContainerWidget> {
           String formattedMonth = DateFormat('MMM').format(currentDate);
 
           // Determine if this date is selected
-          bool isSelectedDate = _selectedDate?.day == currentDate.day &&
-              _selectedDate?.month == currentDate.month &&
-              _selectedDate?.year == currentDate.year;
+          bool isSelectedDate = selectedDate.day == currentDate.day &&
+              selectedDate.month == currentDate.month &&
+              selectedDate.year == currentDate.year;
 
           return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedDate = currentDate;
-              });
-            },
+            onTap: widget.onDateSelected(currentDate),
+            //     () {
+            //   setState(() {
+            //     ref
+            //         .read(todayTasksNotifierProvider.notifier)
+            //         .updateSelectedDate(currentDate);
+            //   });
+            // },
             child: Container(
               width: appWidth * .2,
               padding: EdgeInsets.symmetric(

@@ -34,19 +34,6 @@ class AddTaskController {
 
     taskNameController.text = taskName;
     taskDescriptionController.text = taskDescription;
-    //
-    // if (taskGroup.isEmpty || state.taskGroup.isEmpty) {
-    //   return AppSnackBar.show(context, message: "Select a task Group");
-    // }
-    //
-    // if (taskName.isEmpty || state.taskName.isEmpty) {
-    //   return AppSnackBar.show(context, message: "Give your task a name");
-    // }
-    //
-    // if (taskDescription.isEmpty || state.taskDescription.isEmpty) {
-    //   return AppSnackBar.show(context, message: "Description cannot be empty");
-    // }
-    updateStatus();
 
     await ref
         .read(inputTaskDetailsNotifierProvider.notifier)

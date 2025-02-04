@@ -73,9 +73,9 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
       taskGroupColor: TaskModel.colorToInt(state.taskGroupColor),
       taskName: state.taskName,
       taskDescription: state.taskDescription,
-      startDate: state.startDate,
+      startDay: state.startDate,
       startTime: state.startTime,
-      endDate: state.endDate,
+      endDay: state.endDate,
       endTime: state.endTime,
       status: state.status,
     );

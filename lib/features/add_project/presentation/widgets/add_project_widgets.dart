@@ -172,6 +172,7 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
               ),
               onTap: () {
                 _controller.saveTaskToHiveDB(context);
+
                 AppNavigator.pop(context);
               },
             ),
@@ -233,6 +234,7 @@ class _AddProjectWidgetsState extends ConsumerState<AddProjectWidgets> {
                     ref
                         .read(inputTaskDetailsNotifierProvider.notifier)
                         .onTaskGroupIconSelected(category['icon']);
+
                     AppNavigator.pop(context);
                   },
                 ),

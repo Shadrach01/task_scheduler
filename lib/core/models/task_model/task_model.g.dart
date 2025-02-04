@@ -23,9 +23,9 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       taskGroupColor: fields[3] as int,
       taskName: fields[4] as String,
       taskDescription: fields[5] as String,
-      startDate: fields[6] as String,
+      startDay: fields[6] as String,
       startTime: fields[7] as String,
-      endDate: fields[8] as String,
+      endDay: fields[8] as String,
       endTime: fields[9] as String,
       status: fields[10] as String,
     );
@@ -48,11 +48,11 @@ class TaskModelAdapter extends TypeAdapter<TaskModel> {
       ..writeByte(5)
       ..write(obj.taskDescription)
       ..writeByte(6)
-      ..write(obj.startDate)
+      ..write(obj.startDay)
       ..writeByte(7)
       ..write(obj.startTime)
       ..writeByte(8)
-      ..write(obj.endDate)
+      ..write(obj.endDay)
       ..writeByte(9)
       ..write(obj.endTime)
       ..writeByte(10)

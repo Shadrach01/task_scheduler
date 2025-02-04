@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/constants.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/today_task/controller/today_task_controller.dart';
-import 'package:task_scheduler/features/today_task/presentation/widgets/date_container_widget.dart';
 import 'package:task_scheduler/features/today_task/presentation/widgets/task_tile.dart';
 import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 
@@ -41,8 +41,10 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
 
-    // Listen to the tasks state from riverpod
-    final tasks = ref.watch(todayTasksNotifierProvider).tasks;
+    final tasks = ref
+        .read(todayTasksNotifierProvider.notifier)
+        .filterTasksByDateAndStatus();
+
     return Container(
       height: appHeight,
       width: appWidth,
@@ -59,8 +61,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
           // App Bar
           _appBar(context),
 
-          // Date Container
-          DateContainerWidget(),
+          _dateContainer(appHeight, appWidth),
 
           // All To-do buttons
           _buttonsRow(appHeight, appWidth),
@@ -129,6 +130,9 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
               onTap: () {
                 setState(() {
                   _selectedButton = index;
+                  ref
+                      .read(todayTasksNotifierProvider.notifier)
+                      .updateSelectedButtonStatus(buttonsTexts[index]);
                 });
               },
             ),
@@ -173,5 +177,93 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
               },
             ),
     );
+  }
+
+  Widget _dateContainer(double appHeight, double appWidth) {
+    final selectedDate = ref.read(todayTasksNotifierProvider).selectedDate;
+    return SizedBox(
+      height: appHeight * .12,
+      child: ListView.builder(
+        // controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        itemCount: _daysInMonth(
+          DateTime.now().year,
+          DateTime.now().month,
+        ),
+        itemBuilder: (context, index) {
+          // Calculate the day for each iteration
+          int daysToAdd = index - DateTime.now().day + 1;
+          DateTime currentDate = DateTime.now().add(Duration(days: daysToAdd));
+
+          // Format the date for display
+          String formattedDate = intl.DateFormat('d').format(currentDate);
+          String formattedDay = intl.DateFormat('EE').format(currentDate);
+          String formattedMonth = intl.DateFormat('MMM').format(currentDate);
+
+          // Determine if this date is selected
+          bool isSelectedDate = selectedDate.day == currentDate.day &&
+              selectedDate.month == currentDate.month &&
+              selectedDate.year == currentDate.year;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                ref
+                    .read(todayTasksNotifierProvider.notifier)
+                    .updateSelectedDate(currentDate);
+              });
+            },
+            child: Container(
+              width: appWidth * .2,
+              padding: EdgeInsets.symmetric(
+                horizontal: appWidth * .02,
+                vertical: appHeight * .01,
+              ),
+              margin: EdgeInsets.symmetric(horizontal: appWidth * .02),
+              decoration: BoxDecoration(
+                color: isSelectedDate
+                    ? Colors.blue.shade900
+                    : Colors.white, // Blue for selected, white otherwise
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    formattedMonth,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 18,
+                      weight: FontWeight.normal,
+                    ),
+                  ),
+                  Text(
+                    formattedDate,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 20,
+                      weight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    formattedDay,
+                    style: AppTextStyle.textStyle(
+                      color: isSelectedDate ? Colors.white : Colors.black,
+                      size: 18,
+                      weight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  int _daysInMonth(int year, int month) {
+    return DateTime(year, month + 1, 0).day;
   }
 }

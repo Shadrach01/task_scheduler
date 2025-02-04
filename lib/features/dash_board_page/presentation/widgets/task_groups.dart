@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -23,12 +21,8 @@ class TaskGroups extends ConsumerWidget {
 
     final taskState = ref.watch(todayTasksNotifierProvider);
     final taskList = taskState.tasks;
-    log("Task List DashBoard: $taskList");
 
     final Map<String, Map<String, dynamic>> groupedTasks = {};
-    log('Grouped tasks dashboard: $groupedTasks');
-
-    log("Number of task groups: ${groupedTasks.keys.length}");
 
     for (var task in taskList) {
       if (!groupedTasks.containsKey(task.taskGroup)) {
