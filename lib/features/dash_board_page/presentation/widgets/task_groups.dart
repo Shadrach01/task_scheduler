@@ -19,21 +19,27 @@ class TaskGroups extends ConsumerWidget {
     final height = context.appHeight;
     final width = context.appWidth;
 
-    final taskState = ref.watch(todayTasksNotifierProvider);
-    final taskList = taskState.tasks;
+    final taskList = ref.watch(todayTasksNotifierProvider).tasks;
 
     final Map<String, Map<String, dynamic>> groupedTasks = {};
 
     for (var task in taskList) {
       if (!groupedTasks.containsKey(task.taskGroup)) {
         groupedTasks[task.taskGroup] = {
+          'tasks': [],
           'count': 0,
           'color': task.color,
           'icon': task.taskIcon,
+          'completedCount': 0,
         };
       }
 
       groupedTasks[task.taskGroup]!['count'] += 1;
+      groupedTasks[task.taskGroup]!['tasks'].add(task);
+
+      if (task.status == 'Completed') {
+        groupedTasks[task.taskGroup]!['completedCount'] += 1;
+      }
     }
 
     return Column(
@@ -94,6 +100,12 @@ class TaskGroups extends ConsumerWidget {
                     final groupColor = groupInfo['color'];
                     final groupIcon = groupInfo['icon'] as String;
 
+                    // Calculate progress percentage
+                    final totalTasks = groupInfo['count'] as int;
+                    final completedTasks = groupInfo['completedCount'] as int;
+                    final progressPercent =
+                        totalTasks > 0 ? completedTasks / totalTasks : 0.0;
+
                     // Project tile
                     return projectTile(
                       height,
@@ -102,6 +114,7 @@ class TaskGroups extends ConsumerWidget {
                       availableTasks.toString(),
                       groupColor,
                       groupIcon,
+                      progressPercent,
                     );
                   },
                 ),
@@ -117,6 +130,7 @@ class TaskGroups extends ConsumerWidget {
     String availableTasks,
     Color groupColor,
     String groupIcon,
+    double progressPercent,
   ) {
     return Container(
       height: height * .09,
@@ -183,7 +197,7 @@ class TaskGroups extends ConsumerWidget {
           CircularPercentIndicator(
             backgroundColor: groupColor.withOpacity(.3),
             animation: true,
-            percent: .7,
+            percent: progressPercent,
             progressColor: groupColor,
             radius: width * .05,
           ),

@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
+import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
+import 'package:task_scheduler/core/utils/constants.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/project_progress_container.dart';
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/task_groups.dart';
+import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 
 import '../../../../core/utils/image_res.dart';
 import '../../../user_profile_screen/provider/notifier_provider.dart';
@@ -50,7 +53,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
           BannerContainer(),
 
           // Project tasks that are in progress
-          progressContainer(appWidth, appHeight),
+          progressContainer(appWidth, appHeight, ref),
 
           // Task Groups
           Flexible(child: TaskGroups()),
@@ -104,7 +107,9 @@ class DashBoardScreenWidgets extends ConsumerWidget {
   }
 
   // In Progress text and containers
-  Widget progressContainer(double width, double height) {
+  Widget progressContainer(double width, double height, WidgetRef ref) {
+    final tasks = _tasksInProgress(ref);
+
     return Column(
       spacing: height * .002,
       children: [
@@ -129,7 +134,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  "6",
+                  tasks.length.toString(),
                   style: AppTextStyle.textStyle(
                     color: Colors.blueGrey,
                     size: 14,
@@ -142,17 +147,32 @@ class DashBoardScreenWidgets extends ConsumerWidget {
         SizedBox(
           height: height * .16,
           width: width,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 4,
-            itemBuilder: (context, index) {
-              return ProjectProgressContainer();
-            },
-          ),
+          child: tasks.isEmpty
+              ? Center(
+                  child: Text(
+                    "No task in Progress",
+                    style: AppTextStyle.textStyle(
+                      color: Colors.black87,
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+                    return ProjectProgressContainer(task: task);
+                  },
+                ),
         ),
       ],
     );
   }
 
-  // Task Groups
+  List<TaskModel> _tasksInProgress(WidgetRef ref) {
+    final tasks = ref.watch(todayTasksNotifierProvider).tasks;
+    return tasks
+        .where((task) => task.status == Constants.tasksStatus[2])
+        .toList();
+  }
 }

@@ -1,16 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_scheduler/core/commons/widgets/app_button.dart';
+import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
+import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 
-class BannerContainer extends StatelessWidget {
+class BannerContainer extends ConsumerWidget {
   const BannerContainer({super.key});
 
+  double calculateTodayTaskProgress(List<TaskModel> tasks) {
+    // Get today's date formatted the same way as task dates
+    final today = DateFormat('dd MMM yyyy').format(DateTime.now());
+
+    // Filter tasks for today
+    final todayTasks = tasks.where((task) => task.startDay == today).toList();
+
+    if (todayTasks.isEmpty) return 0.00;
+
+    // Count completed tasks
+    final completedTasks =
+        todayTasks.where((task) => task.status == 'Completed').length;
+
+    // Calculate percentage
+    return completedTasks / todayTasks.length;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
+
+    // Get all tasks from the provider
+    final tasks = ref.watch(todayTasksNotifierProvider).tasks;
+
+    // Calculate progress percentage
+    final progress = calculateTodayTaskProgress(tasks);
+    final progressPercentage = (progress * 100).toInt();
+
+    //Determine message based on progress
+    String message = "No tasks scheduled for today";
+
+    if (tasks.isNotEmpty) {
+      if (progress == 1.0) {
+        message = "All today's tasks are completed!";
+      } else if (progress > 0.5) {
+        message = "Your today's tasks are almost done!";
+      } else {
+        message = "Keep going with today's tasks!";
+      }
+    }
     return Container(
       height: appHeight * .2,
       width: appWidth,
@@ -33,7 +74,7 @@ class BannerContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Your today's task is almost done!",
+                  message,
                   style: AppTextStyle.textStyle(
                     color: Colors.white,
                     weight: FontWeight.w400,
@@ -66,11 +107,11 @@ class BannerContainer extends StatelessWidget {
               radius: appWidth * .135,
               animation: true,
               lineWidth: appWidth * .03,
-              percent: 0.85,
+              percent: progress,
               progressColor: Colors.white,
               circularStrokeCap: CircularStrokeCap.round,
               center: Text(
-                "85%",
+                "$progressPercentage%",
                 style: AppTextStyle.textStyle(
                   color: Colors.white,
                   weight: FontWeight.bold,
