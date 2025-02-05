@@ -22,6 +22,7 @@ class TodayTaskWidgets extends ConsumerStatefulWidget {
 
 class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
   final TodayTaskController _controller = TodayTaskController();
+  late ScrollController _scrollController;
 
   // Track the currently selected button
   int _selectedButton = 0;
@@ -29,11 +30,35 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
 
     // Defer the task loading to after the widget tree is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.getAllTasks(ref);
+      _scrollToCurrentDate();
     });
+  }
+
+  void _scrollToCurrentDate() {
+    final currentDay = DateTime.now().day;
+    // Calculate position based on container width and current day
+    // Container width = container width + horizontal margin
+    final containerWidth = MediaQuery.of(context).size.width * 0.2 +
+        MediaQuery.of(context).size.width * 0.04;
+    final position = (currentDay - 1) * containerWidth;
+
+    // Scroll to the position
+    _scrollController.animateTo(
+      position,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -184,7 +209,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
     return SizedBox(
       height: appHeight * .12,
       child: ListView.builder(
-        // controller: _scrollController,
+        controller: _scrollController,
         scrollDirection: Axis.horizontal,
         itemCount: _daysInMonth(
           DateTime.now().year,

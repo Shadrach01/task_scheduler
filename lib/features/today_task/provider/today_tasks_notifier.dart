@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +20,6 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
 
   void updateSelectedDate(DateTime selectedDate) {
     state = state.copyWith(selectedDate: selectedDate);
-    log('SelectedDate: $selectedDate, stateDate: ${state.selectedDate}');
-    // filterTasksByDateAndStatus();
-    loadTasks();
   }
 
   void updateSelectedButtonStatus(String selectedButton) {
@@ -32,8 +28,6 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
 
   List<TaskModel> _filterTasksByDate() {
     DateTime selectedDate = state.selectedDate;
-
-    log("Filtering tasks by SelectedDate: $selectedDate");
 
     var tasks = state.tasks;
 
@@ -44,8 +38,6 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
           startDay.month == selectedDate.month &&
           startDay.day == selectedDate.day;
     }).toList();
-    _filterTasksByStatus();
-    // filterTasksByDateAndStatus();
 
     return selectedTask;
   }
@@ -55,28 +47,11 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
 
     String selectedStatus = state.selectedStatus;
 
-    log("Filtering tasks b selectedStatus: $selectedStatus");
-
     if (selectedStatus == 'All') {
       return tasksByDate;
     }
 
     return tasksByDate.where((task) => task.status == selectedStatus).toList();
-  }
-
-  // Filter tasks by selected date and status
-  List<TaskModel> _filterTasksByStatus() {
-    String selectedStatus = state.selectedStatus;
-
-    log("SelectedStatus: $selectedStatus");
-    var tasks = state.tasks;
-
-    // If buttonText is "All", return all tasks
-    if (selectedStatus == "All") {
-      return tasks;
-    }
-    // Otherwise, filter tasks based on the status matching the buttonText
-    return tasks.where((task) => task.status == selectedStatus).toList();
   }
 
   void _startStatusUpdateTime() {
@@ -115,7 +90,6 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
         return task.copyWith(status: Constants.tasksStatus[3]); // Completed
       }
     }).toList();
-    log("Statuses: $updatedTasks");
 
     state = state.copyWith(tasks: updatedTasks);
   }
@@ -123,7 +97,5 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
   Future<void> loadTasks() async {
     final allTasks = taskRepo.getAllTasks();
     state = state.copyWith(tasks: allTasks);
-    _filterTasksByStatus(); // Filter tasks immediately after loading them
-    _filterTasksByDate(); // Filter tasks by date immediately after loading them
   }
 }
