@@ -11,21 +11,76 @@ import 'package:task_scheduler/features/today_task/provider/today_tasks_provider
 class BannerContainer extends ConsumerWidget {
   const BannerContainer({super.key});
 
+  // double calculateTodayTaskProgress(List<TaskModel> tasks) {
+  //   // Get today's date formatted the same way as task dates
+  //   final today = DateFormat('dd MMM yyyy').format(DateTime.now());
+  //
+  //   // Filter tasks for today
+  //   final todayTasks = tasks.where((task) => task.startDay == today).toList();
+  //
+  //   if (todayTasks.isEmpty) return 0.00;
+  //
+  //   // Count completed tasks
+  //   final completedTasks =
+  //       todayTasks.where((task) => task.status == 'Completed').length;
+  //
+  //   // Calculate percentage
+  //   return completedTasks / todayTasks.length;
+  // }
+
   double calculateTodayTaskProgress(List<TaskModel> tasks) {
-    // Get today's date formatted the same way as task dates
-    final today = DateFormat('dd MMM yyyy').format(DateTime.now());
+    if (tasks.isEmpty) return 0.0;
 
-    // Filter tasks for today
-    final todayTasks = tasks.where((task) => task.startDay == today).toList();
+    final now = DateTime.now();
 
-    if (todayTasks.isEmpty) return 0.00;
+    // Total duration of tasks (in seconds)
+    double totalDuration = 0.0;
 
-    // Count completed tasks
-    final completedTasks =
-        todayTasks.where((task) => task.status == 'Completed').length;
+    // Elapsed time for all tasks (in seconds)
+    double elapsedTime = 0.0;
 
-    // Calculate percentage
-    return completedTasks / todayTasks.length;
+    for (var task in tasks) {
+      // Parse task start and end times
+      final startTime = DateFormat('hh:mm a').parse(task.startTime);
+      final endTime = DateFormat('hh:mm a').parse(task.endTime);
+
+      // Ensure we are working with DateTime objects in the current day
+      final taskStart = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        startTime.hour,
+        startTime.minute,
+      );
+
+      final taskEnd = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        endTime.hour,
+        endTime.minute,
+      );
+
+      // Skip tasks that have already ended
+      if (taskEnd.isBefore(now)) {
+        elapsedTime += taskEnd.difference(taskStart).inSeconds;
+        totalDuration += taskEnd.difference(taskStart).inSeconds;
+        continue;
+      }
+
+      // Calculate total duration and elapsed time for ongoing or upcoming tasks
+      totalDuration += taskEnd.difference(taskStart).inSeconds;
+
+      if (now.isAfter(taskStart)) {
+        elapsedTime += now.difference(taskStart).inSeconds;
+      }
+    }
+
+    // Avoid division by zero
+    if (totalDuration == 0) return 0.00;
+
+    // Return progress as  a fraction (0.0 to 1.0)
+    return elapsedTime / totalDuration;
   }
 
   @override
@@ -103,21 +158,28 @@ class BannerContainer extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: CircularPercentIndicator(
-              radius: appWidth * .135,
-              animation: true,
-              lineWidth: appWidth * .03,
-              percent: progress,
-              progressColor: Colors.white,
-              circularStrokeCap: CircularStrokeCap.round,
-              center: Text(
-                "$progressPercentage%",
-                style: AppTextStyle.textStyle(
-                  color: Colors.white,
-                  weight: FontWeight.bold,
-                  size: 16,
-                ),
-              ),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: progress),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInOutCubic,
+              builder: (context, value, child) {
+                return CircularPercentIndicator(
+                  radius: appWidth * .135,
+                  // animation: true,
+                  lineWidth: appWidth * .03,
+                  percent: value.clamp(0.0, 1.0),
+                  progressColor: Colors.white,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: Text(
+                    "${(value * 100).toInt()}%",
+                    style: AppTextStyle.textStyle(
+                      color: Colors.white,
+                      weight: FontWeight.bold,
+                      size: 16,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

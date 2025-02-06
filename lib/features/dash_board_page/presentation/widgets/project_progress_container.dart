@@ -7,16 +7,68 @@ import 'package:task_scheduler/core/utils/screen_size.dart';
 
 import '../../../../core/commons/helper/get_icon_data.dart';
 
-class ProjectProgressContainer extends StatelessWidget {
+class ProjectProgressContainer extends StatefulWidget {
   final TaskModel task;
   const ProjectProgressContainer({super.key, required this.task});
+
+  @override
+  State<ProjectProgressContainer> createState() =>
+      _ProjectProgressContainerState();
+}
+
+class _ProjectProgressContainerState extends State<ProjectProgressContainer>
+    with SingleTickerProviderStateMixin {
+  late double _currentProgress;
+  late AnimationController _animationController;
+  late Animation<double> _progressAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentProgress = _calculateTaskProgress();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _animateProgress();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProjectProgressContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Recalculate progress if the task details change
+    if (oldWidget.task != widget.task) {
+      _animateProgress();
+    }
+  }
+
+  void _animateProgress() {
+    final newProgress = _calculateTaskProgress();
+    _progressAnimation = Tween<double>(
+      begin: _currentProgress,
+      end: newProgress,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOutCubic,
+    ));
+
+    _animationController.reset();
+    _animationController.forward();
+    _currentProgress = newProgress;
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   double _calculateTaskProgress() {
     final now = DateTime.now();
 
-    // Parse the start date and time
-    final startDate = DateFormat('dd MMM yyyy').parse(task.startDay);
-    final startTime = DateFormat('hh:mm a').parse(task.startTime);
+    final startDate = DateFormat('dd MMM yyyy').parse(widget.task.startDay);
+    final startTime = DateFormat('hh:mm a').parse(widget.task.startTime);
     final startDateTime = DateTime(
       startDate.year,
       startDate.month,
@@ -25,10 +77,8 @@ class ProjectProgressContainer extends StatelessWidget {
       startTime.minute,
     );
 
-    // parse the end date and time
-    final endDate = DateFormat('dd MMM yyyy').parse(task.endDay);
-    final endTime = DateFormat('hh:mmm a').parse(task.endTime);
-
+    final endDate = DateFormat('dd MMM yyyy').parse(widget.task.endDay);
+    final endTime = DateFormat('hh:mm a').parse(widget.task.endTime);
     final endDateTime = DateTime(
       endDate.year,
       endDate.month,
@@ -37,15 +87,8 @@ class ProjectProgressContainer extends StatelessWidget {
       endTime.minute,
     );
 
-    // if task hasn't started yet
-    if (now.isBefore(startDateTime)) {
-      return 0.0;
-    }
-
-    // If task is completed or past end time
-    if (now.isAfter(endDateTime)) {
-      return 1.0;
-    }
+    if (now.isBefore(startDateTime)) return 0.0;
+    if (now.isAfter(endDateTime)) return 1.0;
 
     final totalDuration = endDateTime.difference(startDateTime).inMinutes;
     final elapsedDuration = now.difference(startDateTime).inMinutes;
@@ -57,9 +100,9 @@ class ProjectProgressContainer extends StatelessWidget {
     if (progress >= 1.0) {
       return Colors.green;
     } else if (progress > 0.7) {
-      return Colors.orange;
+      return Colors.orange.shade700;
     } else {
-      return task.color;
+      return widget.task.color;
     }
   }
 
@@ -67,8 +110,6 @@ class ProjectProgressContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
-
-    final progress = _calculateTaskProgress();
 
     return Container(
       width: appWidth * .6,
@@ -78,19 +119,18 @@ class ProjectProgressContainer extends StatelessWidget {
       ),
       margin: EdgeInsets.only(right: appWidth * .05),
       decoration: BoxDecoration(
-        color: task.color.withOpacity(.15),
+        color: widget.task.color.withOpacity(.15),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: appHeight * .001,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                task.taskGroup,
+                widget.task.taskGroup,
                 style: AppTextStyle.textStyle(
                   color: Colors.grey.shade700,
                   size: 15,
@@ -101,30 +141,34 @@ class ProjectProgressContainer extends StatelessWidget {
                 width: appWidth * .09,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: task.color.withOpacity(.3),
+                  color: widget.task.color.withOpacity(.3),
                 ),
                 child: Icon(
-                  getIconData(task.taskIcon),
-                  color: task.color,
+                  getIconData(widget.task.taskIcon),
+                  color: widget.task.color,
                 ),
               ),
             ],
           ),
           Text(
-            task.taskName,
+            widget.task.taskName,
             style: AppTextStyle.textStyle(
               size: 20,
               weight: FontWeight.w500,
             ),
           ),
           SizedBox(height: appHeight * .02),
-          LinearPercentIndicator(
-            backgroundColor: Colors.white,
-            animation: true,
-            lineHeight: appHeight * .015,
-            percent: progress.clamp(0.0, 1.0),
-            progressColor: _getProgressColor(progress),
-            barRadius: Radius.circular(10),
+          AnimatedBuilder(
+            animation: _progressAnimation,
+            builder: (context, child) {
+              return LinearPercentIndicator(
+                backgroundColor: Colors.white,
+                lineHeight: appHeight * .015,
+                percent: _progressAnimation.value.clamp(0.0, 1.0),
+                progressColor: _getProgressColor(_progressAnimation.value),
+                barRadius: const Radius.circular(10),
+              );
+            },
           ),
         ],
       ),
