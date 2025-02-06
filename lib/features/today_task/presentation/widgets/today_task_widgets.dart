@@ -92,7 +92,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
           _buttonsRow(appHeight, appWidth),
 
           // Tasks tile
-          Expanded(child: _taskTile(appHeight, tasks)),
+          Expanded(child: _taskTile(appHeight, appWidth, tasks)),
         ],
       ),
     );
@@ -181,7 +181,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
   }
 
   // Tasks tile
-  Widget _taskTile(double height, List<TaskModel> tasks) {
+  Widget _taskTile(double height, double width, List<TaskModel> tasks) {
     return SizedBox(
       height: height * .8,
       child: tasks.isEmpty
@@ -196,8 +196,11 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-                return TaskTile(
-                  task: task,
+                return Padding(
+                  padding: EdgeInsets.only(bottom: height * .009),
+                  child: TaskTile(
+                    task: task,
+                  ),
                 );
               },
             ),
