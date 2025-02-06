@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -97,5 +98,17 @@ class TodayTasksNotifier extends StateNotifier<TodayTaskState> {
   Future<void> loadTasks() async {
     final allTasks = taskRepo.getAllTasks();
     state = state.copyWith(tasks: allTasks);
+  }
+
+  // Delete task
+  Future<void> deleteTask(String id) async {
+    // Delete from the database
+    await taskRepo.deleteTask(id);
+
+    // Update the state by filtering out the deleted task
+    final updateTasks = state.tasks.where((task) => task.id != id).toList();
+    state = state.copyWith(tasks: updateTasks);
+
+    log("Tasks after deleting: ${state.tasks}");
   }
 }

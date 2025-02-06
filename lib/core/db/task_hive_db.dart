@@ -39,4 +39,9 @@ class TaskHiveDB {
   Future<void> clearUser() async {
     await _taskBox!.clear();
   }
+
+  // Delete tasks
+  Future<void> deleteTask(String id) async {
+    await _taskBox?.delete(id);
+  }
 }

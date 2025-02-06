@@ -8,11 +8,17 @@ import 'package:task_scheduler/features/today_task/provider/today_tasks_provider
 import '../../../../core/utils/app_text_style.dart';
 import '../../../../core/utils/image_res.dart';
 
-class AllTasksScreenWidgets extends ConsumerWidget {
+class AllTasksScreenWidgets extends ConsumerStatefulWidget {
   const AllTasksScreenWidgets({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AllTasksScreenWidgets> createState() =>
+      _AllTasksScreenWidgetsState();
+}
+
+class _AllTasksScreenWidgetsState extends ConsumerState<AllTasksScreenWidgets> {
+  @override
+  Widget build(BuildContext context) {
     final appHeight = context.appHeight;
     final appWidth = context.appWidth;
     return Container(
@@ -73,19 +79,34 @@ class AllTasksScreenWidgets extends ConsumerWidget {
     final tasks = ref.watch(todayTasksNotifierProvider).tasks;
     return SizedBox(
       height: height * .8,
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          final task = tasks[index];
-          return Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TasksDetailContainer(
-              task: task,
+      child: tasks.isEmpty
+          ? Center(
+              child: Text(
+                "No set tasks yet!",
+                style: AppTextStyle.textStyle(
+                  size: 24,
+                ),
+              ),
+            )
+          : ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: tasks.length,
+              itemBuilder: (context, index) {
+                final task = tasks[index];
+                return Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TasksDetailContainer(
+                    task: task,
+                    onTap: () async {
+                      await ref
+                          .read(todayTasksNotifierProvider.notifier)
+                          .deleteTask(task.id);
+                      setState(() {});
+                    },
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

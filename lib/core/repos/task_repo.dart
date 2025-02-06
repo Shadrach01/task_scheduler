@@ -21,4 +21,9 @@ class TaskRepo {
   Future<void> clearTaskDetails() async {
     await taskHiveDB.clearUser();
   }
+
+  // Delete task
+  Future<void> deleteTask(String id) async {
+    await taskHiveDB.deleteTask(id);
+  }
 }

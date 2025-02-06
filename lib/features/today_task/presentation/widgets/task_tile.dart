@@ -8,9 +8,11 @@ import 'package:task_scheduler/core/utils/screen_size.dart';
 
 class TaskTile extends StatelessWidget {
   final TaskModel task;
+  final void Function(BuildContext)? onPressed;
   const TaskTile({
     super.key,
     required this.task,
+    required this.onPressed,
   });
 
   @override
@@ -19,25 +21,9 @@ class TaskTile extends StatelessWidget {
     final appWidth = context.appWidth;
 
     return Slidable(
-      startActionPane: ActionPane(
+      endActionPane: ActionPane(
         extentRatio: 0.35,
         motion: const BehindMotion(),
-        children: [
-          CustomSlidableAction(
-            onPressed: (context) {},
-            backgroundColor: Colors.black87,
-            borderRadius: BorderRadius.circular(20),
-            child: Icon(
-              IconlyBold.delete,
-              color: Colors.redAccent.shade700,
-              size: appHeight * .03,
-            ),
-          ),
-        ],
-      ),
-      endActionPane: ActionPane(
-        extentRatio: 0.3,
-        motion: const StretchMotion(),
         children: [
           CustomSlidableAction(
             onPressed: (context) {},
@@ -47,6 +33,22 @@ class TaskTile extends StatelessWidget {
               IconlyBold.edit,
               color: Colors.black87,
               size: appHeight * .035,
+            ),
+          ),
+        ],
+      ),
+      startActionPane: ActionPane(
+        extentRatio: 0.3,
+        motion: const StretchMotion(),
+        children: [
+          CustomSlidableAction(
+            onPressed: onPressed,
+            backgroundColor: Colors.black87,
+            borderRadius: BorderRadius.circular(20),
+            child: Icon(
+              IconlyBold.delete,
+              color: Colors.redAccent.shade700,
+              size: appHeight * .03,
             ),
           ),
         ],

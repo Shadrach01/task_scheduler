@@ -8,7 +8,12 @@ import '../../../../core/commons/helper/get_icon_data.dart';
 
 class TasksDetailContainer extends StatelessWidget {
   final TaskModel task;
-  const TasksDetailContainer({super.key, required this.task});
+  final void Function() onTap;
+  const TasksDetailContainer({
+    super.key,
+    required this.task,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +55,7 @@ class TasksDetailContainer extends StatelessWidget {
 
               // Delete Task
               GestureDetector(
-                onTap: () {},
+                onTap: onTap,
                 child: Container(
                   padding: EdgeInsets.all(appWidth * .02),
                   decoration: BoxDecoration(

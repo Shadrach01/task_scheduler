@@ -200,6 +200,12 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
                   padding: EdgeInsets.only(bottom: height * .009),
                   child: TaskTile(
                     task: task,
+                    onPressed: (context) async {
+                      await ref
+                          .read(todayTasksNotifierProvider.notifier)
+                          .deleteTask(task.id);
+                      setState(() {});
+                    },
                   ),
                 );
               },
