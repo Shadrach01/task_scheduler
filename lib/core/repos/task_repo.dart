@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_scheduler/core/db/task_hive_db.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 
@@ -27,3 +28,10 @@ class TaskRepo {
     await taskHiveDB.deleteTask(id);
   }
 }
+
+// Task Repository Provider
+final taskRepositoryProvider = Provider<TaskRepo>((ref) {
+  final taskHiveDB = ref.read(taskHiveDBProvider);
+
+  return TaskRepo(taskHiveDB);
+});

@@ -1,9 +1,10 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/repos/task_repo.dart';
+import 'package:task_scheduler/core/utils/notification/notification_service.dart';
 import 'package:task_scheduler/features/add_project/provider/add_task_state.dart';
 import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -13,7 +14,9 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
 
   // To create unique uid
   final Uuid _uuid = const Uuid();
-  InputTaskStateNotifier(this.taskRepo) : super(TaskInputState());
+  InputTaskStateNotifier(
+    this.taskRepo,
+  ) : super(TaskInputState());
   // Update task Group
   void onTaskGroupSelected(String taskGroup) {
     state = state.copyWith(taskGroup: taskGroup);
@@ -79,10 +82,25 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
       endTime: state.endTime,
       status: state.status,
     );
-    log('State before saving from the notifier: $taskModel');
+
     await taskRepo.saveTaskDetails(taskModel);
 
     // Call the loadTask in the today's task notifier to load the tasks again
     await ref.read(todayTasksNotifierProvider.notifier).loadTasks();
+
+    final startDateTime = DateFormat('dd MMM yyyy hh:mm a')
+        .parse('${state.startDate} ${state.startTime}');
+
+    final endDateTime = DateFormat('dd MMM yyyy hh:mm a')
+        .parse('${state.endDate} ${state.endTime}');
+
+// Schedule notification
+    await NotificationService.scheduleNotification(taskModel, startDateTime);
+
+    await NotificationService.scheduleNotificationTaskEnded(
+      'Task ended',
+      'Your task: ${taskModel.taskName} has ended',
+      endDateTime,
+    );
   }
 }

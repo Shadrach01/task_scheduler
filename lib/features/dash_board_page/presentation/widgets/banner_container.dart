@@ -133,7 +133,7 @@ class BannerContainer extends ConsumerWidget {
                   style: AppTextStyle.textStyle(
                     color: Colors.white,
                     weight: FontWeight.w400,
-                    size: 18,
+                    size: appWidth * .05,
                   ),
                 ),
                 SizedBox(
@@ -145,7 +145,7 @@ class BannerContainer extends ConsumerWidget {
                       "View Task",
                       style: AppTextStyle.textStyle(
                         color: Colors.blue.shade900,
-                        size: 16,
+                        size: appWidth * .039,
                         weight: FontWeight.bold,
                       ),
                     ),

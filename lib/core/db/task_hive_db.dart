@@ -3,6 +3,7 @@
 HIVE DB FOR TASKS
  */
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 
@@ -45,3 +46,5 @@ class TaskHiveDB {
     await _taskBox?.delete(id);
   }
 }
+
+final taskHiveDBProvider = Provider<TaskHiveDB>((ref) => TaskHiveDB());
