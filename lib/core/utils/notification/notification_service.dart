@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -46,24 +47,10 @@ class NotificationService {
         ?.requestNotificationsPermission();
   }
 
-  // Show an instant Notification
-  static Future<void> showInstantNotification(String title, String body) async {
-    // Define Notification Details
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: AndroidNotificationDetails(
-        "channel_Id",
-        "channel_Name",
-        importance: Importance.high,
-        priority: Priority.high,
-      ),
-    );
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      platformChannelSpecifics,
-    );
-  }
+// A list to hold every unique Id for each alarm scheduled
+  static final List<int> _uniqueNotificationIds = [];
+
+  static final List<int> _finishedUniqueNotificationIds = [];
 
   // Show a scheduled Notification according to the set task time
   static Future<void> scheduleNotification(
@@ -79,8 +66,12 @@ class NotificationService {
         priority: Priority.high,
       ),
     );
+
+    // Unique Id/ Key for each task notification
+    int uniqueNotificationId = UniqueKey().hashCode;
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      1,
+      uniqueNotificationId,
       task.taskName,
       task.taskDescription,
       tz.TZDateTime.from(scheduledDate, tz.local),
@@ -90,6 +81,9 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
+
+    // Add the notification ID to the list of Ids
+    _uniqueNotificationIds.add(uniqueNotificationId);
   }
 
   // Show a scheduled Notification according to the set task time
@@ -107,8 +101,12 @@ class NotificationService {
         priority: Priority.high,
       ),
     );
+
+    // Unique Id/ Key for each task finished notification
+    int uniqueNotificationId = UniqueKey().hashCode;
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      2,
+      uniqueNotificationId,
       title,
       body,
       tz.TZDateTime.from(scheduledDate, tz.local),
@@ -118,5 +116,8 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
+
+    // Add the notification ID to the list of Ids of _finishedUniqueNotificationIds
+    _finishedUniqueNotificationIds.add(uniqueNotificationId);
   }
 }
