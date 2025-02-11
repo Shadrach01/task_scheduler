@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:task_scheduler/core/commons/widgets/app_button.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/constants.dart';
+import 'package:task_scheduler/core/utils/notification_icon_button.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/today_task/controller/today_task_controller.dart';
 import 'package:task_scheduler/features/today_task/presentation/widgets/task_tile.dart';
@@ -112,15 +113,7 @@ class _TodayTaskWidgetsState extends ConsumerState<TodayTaskWidgets> {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: () {
-            // TODO: IMPLEMENT THE NOTIFICATIONS ALARM ICON
-          },
-          icon: Icon(
-            IconlyBold.notification,
-            color: Colors.black87,
-          ),
-        ),
+        notificationIconButton(context),
       ],
     );
   }

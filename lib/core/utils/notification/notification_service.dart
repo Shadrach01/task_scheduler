@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_scheduler/features/notification_page/provider/notified_tasks_notifier.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../models/task_model/task_model.dart';
@@ -13,8 +14,38 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  // Reference to the NotifiedTasksNotifier
+  static late NotifiedTasksNotifier _notifiedTasksNotifier;
+
+  // Map to store tasks by their notification IDs
+  static final Map<int, TaskModel> _taskNotifications = {};
+  static final Map<int, TaskModel> _endedTaskNotifications = {};
+
+  static void registerNotifier(NotifiedTasksNotifier notifier) {
+    _notifiedTasksNotifier = notifier;
+    log('NotifiedTasksNotifier registered');
+  }
+
   static Future<void> onDidReceiveNotification(
-      NotificationResponse notificationResponse) async {}
+      NotificationResponse notificationResponse) async {
+    final int id = notificationResponse.id ?? -1;
+
+    // Check if this is a task start notification
+    if (_taskNotifications.containsKey(id)) {
+      log('Found start notification for task id: $id');
+      final task = _taskNotifications[id]!;
+      _notifiedTasksNotifier.addStartedTask(task);
+      log('Started tasks count: ${_notifiedTasksNotifier?.state.startedTasks.length}');
+    }
+
+    // Check if this is a task end notification
+    if (_endedTaskNotifications.containsKey(id)) {
+      log('Found end notification for task id: $id');
+      final task = _endedTaskNotifications[id]!;
+      _notifiedTasksNotifier.addEndedTask(task);
+      log('Ended tasks count: ${_notifiedTasksNotifier?.state.endedTasks.length}');
+    }
+  }
 
 // Initialize the notification plugin
   static Future<void> init() async {
@@ -70,6 +101,10 @@ class NotificationService {
     // Unique Id/ Key for each task notification
     int uniqueNotificationId = UniqueKey().hashCode;
 
+// Store the task with its notification ID
+    _taskNotifications[uniqueNotificationId] = task;
+    log('Task stored in _taskNotifications map');
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       uniqueNotificationId,
       task.taskName,
@@ -88,7 +123,7 @@ class NotificationService {
 
   // Show a scheduled Notification according to the set task time
   static Future<void> scheduleNotificationTaskEnded(
-    String title,
+    TaskModel task,
     String body,
     DateTime scheduledDate,
   ) async {
@@ -105,9 +140,13 @@ class NotificationService {
     // Unique Id/ Key for each task finished notification
     int uniqueNotificationId = UniqueKey().hashCode;
 
+    // Store the task with its end notification ID
+    _endedTaskNotifications[uniqueNotificationId] = task;
+    log('Task stored in _endedTaskNotifications map');
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
       uniqueNotificationId,
-      title,
+      task.taskName,
       body,
       tz.TZDateTime.from(scheduledDate, tz.local),
       platformChannelSpecifics,

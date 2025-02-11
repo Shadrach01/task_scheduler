@@ -98,7 +98,7 @@ class InputTaskStateNotifier extends StateNotifier<TaskInputState> {
     await NotificationService.scheduleNotification(taskModel, startDateTime);
 
     await NotificationService.scheduleNotificationTaskEnded(
-      'Task ended',
+      taskModel,
       'Your task: ${taskModel.taskName} has ended',
       endDateTime,
     );

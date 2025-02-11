@@ -100,19 +100,24 @@ class TasksDetailContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Task Name: ",
-                style: AppTextStyle.textStyle(
-                  size: 15,
-                  weight: FontWeight.bold,
+              Expanded(
+                flex: 2,
+                child: Text(
+                  "Task Name: ",
+                  style: AppTextStyle.textStyle(
+                    size: 15,
+                    weight: FontWeight.bold,
+                  ),
                 ),
               ),
-              Text(
-                task.taskName,
-                style: AppTextStyle.textStyle(
-                  color: Colors.black87,
-                  weight: FontWeight.w400,
-                  size: 16,
+              Expanded(
+                child: Text(
+                  task.taskName,
+                  style: AppTextStyle.textStyle(
+                    color: Colors.black87,
+                    weight: FontWeight.w400,
+                    size: appWidth * .05,
+                  ),
                 ),
               ),
             ],
@@ -120,20 +125,27 @@ class TasksDetailContainer extends StatelessWidget {
           Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: appWidth * .2,
             children: [
-              Text(
-                "Task Desc: ",
-                style: AppTextStyle.textStyle(
-                  size: 15,
-                  weight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  "Task Desc: ",
+                  style: AppTextStyle.textStyle(
+                    size: appWidth * .04,
+                    weight: FontWeight.bold,
+                  ),
                 ),
               ),
-              Text(
-                task.taskDescription,
-                style: AppTextStyle.textStyle(
-                  color: Colors.black87,
-                  size: 18,
-                  weight: FontWeight.w400,
+              Expanded(
+                child: Text(
+                  task.taskDescription,
+                  style: AppTextStyle.textStyle(
+                    color: Colors.black87,
+                    size: appWidth * .05,
+                    weight: FontWeight.w400,
+                  ),
+                  softWrap: true,
                 ),
               ),
             ],

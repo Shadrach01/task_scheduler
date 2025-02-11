@@ -6,6 +6,7 @@ import 'package:iconly/iconly.dart';
 import 'package:task_scheduler/core/models/task_model/task_model.dart';
 import 'package:task_scheduler/core/utils/app_text_style.dart';
 import 'package:task_scheduler/core/utils/constants.dart';
+import 'package:task_scheduler/core/utils/notification_icon_button.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/project_progress_container.dart';
 import 'package:task_scheduler/features/dash_board_page/presentation/widgets/task_groups.dart';
@@ -47,6 +48,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
             appWidth,
             userState.profilePicture,
             userState.userName,
+            context,
           ),
 
           // Task almost done container
@@ -63,7 +65,12 @@ class DashBoardScreenWidgets extends ConsumerWidget {
   }
 
   // App bar
-  AppBar homePageAppBar(double width, String pp, String userName) {
+  AppBar homePageAppBar(
+    double width,
+    String pp,
+    String userName,
+    BuildContext context,
+  ) {
     return AppBar(
       backgroundColor: Colors.transparent,
       leading: CircleAvatar(
@@ -98,10 +105,7 @@ class DashBoardScreenWidgets extends ConsumerWidget {
         ],
       ),
       actions: [
-        Icon(
-          IconlyBold.notification,
-          color: Colors.black87,
-        ),
+        notificationIconButton(context),
       ],
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconly/iconly.dart';
+import 'package:task_scheduler/core/utils/notification_icon_button.dart';
 import 'package:task_scheduler/core/utils/screen_size.dart';
 import 'package:task_scheduler/features/all_tasks/presentation/widgets/tasks_details_container.dart';
 import 'package:task_scheduler/features/today_task/provider/today_tasks_provider.dart';
@@ -61,15 +62,7 @@ class _AllTasksScreenWidgetsState extends ConsumerState<AllTasksScreenWidgets> {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: () {
-            // TODO: IMPLEMENT THE NOTIFICATIONS ALARM ICON
-          },
-          icon: Icon(
-            IconlyBold.notification,
-            color: Colors.black87,
-          ),
-        ),
+        notificationIconButton(context),
       ],
     );
   }
